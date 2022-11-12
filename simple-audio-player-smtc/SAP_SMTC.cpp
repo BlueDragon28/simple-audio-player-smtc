@@ -6,6 +6,8 @@
 
 using namespace winrt::Windows::Media;
 
+namespace SMTC
+{
 /*
 This class is a wrapper arround the Windows Media Player object.
 */
@@ -25,10 +27,10 @@ public:
 
 		// Handle media keys event.
 		SMTC().ButtonPressed(
-				[this](SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args) -> void
-				{
-					this->handleMediaCommand(sender, args);
-				});
+			[this](SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args) -> void
+			{
+				this->handleMediaCommand(sender, args);
+			});
 
 		// Enable playback control.
 		SMTC().IsPlayEnabled(true);
@@ -114,7 +116,7 @@ private:
 	*/
 	void handleMediaCommand(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
 	{
-		
+
 	}
 
 	inline SystemMediaTransportControls SMTC()
@@ -148,4 +150,5 @@ void SAP_SMTC::playbackStatusChanged(PlaybackStatus status)
 void SAP_SMTC::trackChanged(const char* title, const char* artists)
 {
 	m_SMTC->updateMediaInfo(title, artists);
+}
 }

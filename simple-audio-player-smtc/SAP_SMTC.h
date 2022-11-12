@@ -7,6 +7,8 @@
 #define EXPORT_DLL __declspec(dllimport)
 #endif
 
+namespace SMTC
+{
 class WindowsMediaPlayerWrapper;
 
 /*
@@ -46,5 +48,6 @@ public:
 private:
 	WindowsMediaPlayerWrapper* m_SMTC;
 };
+}
 
 #endif // SAP_SMTC_H_
