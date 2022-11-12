@@ -1,6 +1,8 @@
 #ifndef SAP_SMTC_H_
 #define SAP_SMTC_H_
 
+#include <functional>
+
 #ifdef SAP_SMTC_BUILDING
 #define EXPORT_DLL __declspec(dllexport)
 #else
@@ -20,6 +22,14 @@ enum class PlaybackStatus
 	PLAYING,
 	PAUSED,
 	STOPPED
+};
+
+enum class PlaybackType
+{
+	UNKNOWN = -1,
+	PLAY_PAUSE,
+	PREVIOUS,
+	NEXT
 };
 
 /*
@@ -44,6 +54,12 @@ public:
 	Notify the System Media Transport Control about the change of track.
 	*/
 	void trackChanged(const char* title, const char* artists);
+
+	/*
+	Since we do not have access to the Qt Signal system. We store the user callback for every type of playback (play, pause, previous, next).
+	Then, the appropriate callback is then call every time the System Media Transport Control ask for it.
+	*/
+	void setPlaybackCallback(PlaybackType type, const std::function<void()>& callback);
 
 private:
 	WindowsMediaPlayerWrapper* m_SMTC;

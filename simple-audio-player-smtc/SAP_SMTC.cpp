@@ -110,19 +110,97 @@ public:
 		SMTC().DisplayUpdater().Update();
 	}
 
+	void setPlaybackCallback(PlaybackType type, const std::function<void()>& callback)
+	{
+		// Check what type it is and store the callback to the appropriate member variable.
+		switch (type)
+		{
+		case PlaybackType::PLAY_PAUSE:
+		{
+			m_playPauseCallback = callback;
+		} break;
+
+		case PlaybackType::PREVIOUS:
+		{
+			m_previousCallback = callback;
+		} break;
+
+		case PlaybackType::NEXT:
+		{
+			m_nextCallback = callback;
+		} break;
+
+		case PlaybackType::UNKNOWN:
+		default:
+		{
+			return;
+		} break;
+		}
+	}
+
 private:
 	/*
 	Called everytime there is a media commend event (like play, pause...).
 	*/
 	void handleMediaCommand(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
 	{
+		// Watch what media key has been cliked and call the corresponding callback.
+		switch (args.Button())
+		{
+		case SystemMediaTransportControlsButton::Play:
+		case SystemMediaTransportControlsButton::Pause:
+		{
+			try
+			{
+				m_playPauseCallback();
+			}
+			catch (const std::bad_function_call&)
+			{
+				return;
+			}
+		} break;
 
+		case SystemMediaTransportControlsButton::Previous:
+		{
+			try
+			{
+				m_previousCallback();
+			}
+			catch (const std::bad_function_call&)
+			{
+				return;
+			}
+		} break;
+
+		case SystemMediaTransportControlsButton::Next:
+		{
+			try
+			{
+				m_nextCallback();
+			}
+			catch (const std::bad_function_call&)
+			{
+				return;
+			}
+		} break;
+
+		default:
+		{
+			return;
+		} break;
+		}
 	}
 
 	inline SystemMediaTransportControls SMTC()
 	{
 		return m_mediaPlayer.SystemMediaTransportControls();
 	}
+
+	// The callback to call on media keys event.
+	std::function<void()>
+		m_playPauseCallback,
+		m_previousCallback,
+		m_nextCallback;
 
 	Playback::MediaPlayer m_mediaPlayer;
 };
@@ -150,5 +228,10 @@ void SAP_SMTC::playbackStatusChanged(PlaybackStatus status)
 void SAP_SMTC::trackChanged(const char* title, const char* artists)
 {
 	m_SMTC->updateMediaInfo(title, artists);
+}
+
+void SAP_SMTC::setPlaybackCallback(PlaybackType type, const std::function<void()>& callback)
+{
+	m_SMTC->setPlaybackCallback(type, callback);
 }
 }
