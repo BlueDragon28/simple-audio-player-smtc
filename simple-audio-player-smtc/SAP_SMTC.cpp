@@ -1,7 +1,6 @@
 #include "SAP_SMTC.h"
 
 #include <winrt/Windows.Foundation.h>
-#include <winrt/Windows.Media.h>
 #include <winrt/Windows.Media.Playback.h>
 
 using namespace winrt::Windows::Media;
