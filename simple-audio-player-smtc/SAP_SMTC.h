@@ -61,6 +61,13 @@ public:
 	*/
 	void setPlaybackCallback(PlaybackType type, const std::function<void()>& callback);
 
+	/*
+	Tell the system if it can go to the next track.
+	If there is no track to play after the current one, this allow 
+	the system to inform the user about it.
+	*/
+	void setCanNext(bool value);
+
 private:
 	WindowsMediaPlayerWrapper* m_SMTC;
 };

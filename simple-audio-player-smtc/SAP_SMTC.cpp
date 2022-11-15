@@ -137,6 +137,15 @@ public:
 		}
 	}
 
+	/*
+	Tell the system if it can go to the next track.
+	*/
+	void setCanNext(bool value)
+	{
+		SMTC().IsNextEnabled(value);
+		SMTC().DisplayUpdater().Update();
+	}
+
 private:
 	/*
 	Called everytime there is a media commend event (like play, pause...).
@@ -232,5 +241,10 @@ void SAP_SMTC::trackChanged(const char* title, const char* artists)
 void SAP_SMTC::setPlaybackCallback(PlaybackType type, const std::function<void()>& callback)
 {
 	m_SMTC->setPlaybackCallback(type, callback);
+}
+
+void SAP_SMTC::setCanNext(bool value)
+{
+	m_SMTC->setCanNext(value);
 }
 }
