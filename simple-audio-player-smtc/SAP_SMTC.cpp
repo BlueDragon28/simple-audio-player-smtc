@@ -32,11 +32,9 @@ public:
 			});
 
 		// Enable playback control.
-		SMTC().IsPlayEnabled(true);
-		SMTC().IsPauseEnabled(true);
+		playing(false);
 		SMTC().IsStopEnabled(false); // Not implemented yet.
-		SMTC().IsPreviousEnabled(true);
-		SMTC().IsNextEnabled(true);
+		SMTC().IsNextEnabled(false);
 
 		SMTC().PlaybackStatus(MediaPlaybackStatus::Closed);
 		SMTC().IsEnabled(true);
@@ -62,6 +60,7 @@ public:
 		case PlaybackStatus::PLAYING:
 		{
 			SMTCStatus = MediaPlaybackStatus::Playing;
+			playing(true); // Tell the system the it can enable play/pause and previous button.
 		} break;
 		case PlaybackStatus::PAUSED:
 		{
@@ -72,6 +71,7 @@ public:
 		case PlaybackStatus::STOPPED:
 		{
 			SMTCStatus = MediaPlaybackStatus::Stopped;
+			playing(false); // Tell the system it can disable play/pause and previous button.
 		} break;
 		}
 
@@ -202,6 +202,21 @@ private:
 	inline SystemMediaTransportControls SMTC()
 	{
 		return m_mediaPlayer.SystemMediaTransportControls();
+	}
+
+	/*
+	Helper function to enable or disable playback method.
+	*/
+	inline void playing(bool isPlaying)
+	{
+		SMTC().IsPlayEnabled(isPlaying);
+		SMTC().IsPauseEnabled(isPlaying);
+		SMTC().IsPreviousEnabled(isPlaying);
+
+		if (!isPlaying)
+		{
+			SMTC().IsNextEnabled(false);
+		}
 	}
 
 	// The callback to call on media keys event.
